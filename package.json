@@ -1,0 +1,12 @@
+{
+  "name": "compass-needle",
+  "private": true,
+  "version": "2.0.3",
+  "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^4.0.4"
+  }
+}
