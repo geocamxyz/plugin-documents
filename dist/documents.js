@@ -3,9 +3,9 @@ const c = (n, e = {}, o = "") => {
   for (let i in e)
     t.setAttribute(i, e[i]);
   return t.innerHTML = o, t;
-}, d = (n, e) => (document.getElementById(n) || document.getElementsByTagName("head")[0].prepend(c("STYLE", { type: "text/css" }, e)), !0), r = function(n = {}) {
+}, u = (n, e) => (document.getElementById(n) || document.getElementsByTagName("head")[0].prepend(c("STYLE", { type: "text/css" }, e)), !0), l = function(n = {}) {
   let e, o, t;
-  d("geocam-documents-button", `
+  u("geocam-documents-button", `
   .geocam-viewer-control-button.geocam-documents-button {
       background-size: 24px 24px;
       background-repeat: no-repeat;
@@ -25,25 +25,37 @@ const c = (n, e = {}, o = "") => {
     o(), e.wrapper.removeChild(needle);
   };
 };
-class u extends HTMLElement {
+class r extends HTMLElement {
   constructor() {
-    super(), this.plugin = null, console.log("documents init");
+    super(), this.plugin = null, this.viewer = null, console.log("documents init");
   }
   connectedCallback() {
-    console.log("documents connected"), this.plugin = new r({ href: this.getAttribute("href") });
-    const e = this.parentNode;
-    this.viewer = e.viewer, this.viewer && this.viewer.plugin ? this.viewer.plugin(this.plugin) : console.error(
-      "GeocamViewerDocuments must be a child of GeocamViewer"
-    );
+    console.log("documents connected");
+    const e = this.closest("geocam-viewer");
+    if (!e) {
+      console.error(
+        "GeocamViewerDocuments must be a child of GeocamViewer"
+      );
+      return;
+    }
+    const o = () => {
+      const t = e.viewer;
+      if (t && typeof t.plugin == "function") {
+        if (this.plugin) return;
+        this.viewer = t, this.plugin = new l({ href: this.getAttribute("href") }), this.viewer.plugin(this.plugin);
+      } else
+        setTimeout(o, 50);
+    };
+    o();
   }
   disconnectedCallback() {
-    this.plugin = null, this.viewer = null, console.log("documents disconnected");
+    this.plugin && typeof this.plugin.destroy == "function" && this.plugin.destroy(), this.plugin = null, this.viewer = null, console.log("documents disconnected");
   }
 }
 window.customElements.define(
   "geocam-viewer-documents",
-  u
+  r
 );
 export {
-  u as GeocamViewerDocuments
+  r as GeocamViewerDocuments
 };
