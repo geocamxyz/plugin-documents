@@ -41,7 +41,8 @@ class r extends HTMLElement {
     const o = () => {
       const t = e.viewer;
       if (t && typeof t.plugin == "function") {
-        if (this.plugin) return;
+        if (this.plugin)
+          return;
         this.viewer = t, this.plugin = new l({ href: this.getAttribute("href") }), this.viewer.plugin(this.plugin);
       } else
         setTimeout(o, 50);
